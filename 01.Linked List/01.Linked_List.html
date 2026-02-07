@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>링크드 리스트 Reverse 함수 구현</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+      }
+
+      .container {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 30px;
+        font-size: 2.5em;
+      }
+
+      .algorithm-section {
+        margin-bottom: 40px;
+        padding: 25px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border-left: 5px solid #3498db;
+      }
+
+      .step-container {
+        margin: 30px 0;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .step-title {
+        font-size: 1.3em;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        padding: 10px;
+        background: linear-gradient(45deg, #3498db, #2ecc71);
+        color: white;
+        border-radius: 5px;
+        text-align: center;
+      }
+
+      .linked-list {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px 0;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .node {
+        display: flex;
+        align-items: center;
+        background: #3498db;
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        font-weight: bold;
+        min-width: 60px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .node.current {
+        background: #e74c3c;
+        animation: pulse 1.5s infinite;
+      }
+
+      .node.prev {
+        background: #f39c12;
+      }
+
+      .node.next {
+        background: #27ae60;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .arrow {
+        font-size: 24px;
+        color: #2c3e50;
+        margin: 0 10px;
+      }
+
+      .pointer {
+        margin: 10px 0;
+        padding: 8px 15px;
+        background: #ecf0f1;
+        border-radius: 5px;
+        font-family: monospace;
+        font-size: 14px;
+      }
+
+      .code-section {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 25px;
+        border-radius: 10px;
+        font-family: "Courier New", monospace;
+        margin: 20px 0;
+        overflow-x: auto;
+      }
+
+      .code-title {
+        color: #3498db;
+        font-size: 1.2em;
+        margin-bottom: 15px;
+        font-weight: bold;
+      }
+
+      .highlight {
+        background: #f39c12;
+        padding: 2px 4px;
+        border-radius: 3px;
+        color: #2c3e50;
+      }
+
+      .controls {
+        text-align: center;
+        margin: 30px 0;
+      }
+
+      button {
+        background: linear-gradient(45deg, #3498db, #2ecc71);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        margin: 0 10px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      button:disabled {
+        background: #bdc3c7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .complexity {
+        background: #e8f6f3;
+        border: 2px solid #16a085;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+      }
+
+      .complexity h3 {
+        color: #16a085;
+        margin-top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔄 링크드 리스트 Reverse 함수 구현</h1>
+
+      <div class="algorithm-section">
+        <h2>📋 알고리즘 개요</h2>
+        <p>
+          <strong>핵심 아이디어:</strong> 세 개의 포인터(prev, current, next)를
+          사용하여 각 노드의 링크 방향을 뒤바꿉니다.
+        </p>
+        <ol>
+          <li>
+            <code>prev = null</code>, <code>current = head</code>로 초기화
+          </li>
+          <li>현재 노드가 null이 아닌 동안 반복:</li>
+          <ul>
+            <li><code>next = current.next</code> (다음 노드 저장)</li>
+            <li><code>current.next = prev</code> (링크 방향 뒤바꾸기)</li>
+            <li>
+              <code>prev = current</code>, <code>current = next</code> (포인터
+              이동)
+            </li>
+          </ul>
+          <li><code>prev</code>가 새로운 head가 됩니다</li>
+        </ol>
+      </div>
+
+      <div class="controls">
+        <button onclick="resetAnimation()">🔄 처음부터</button>
+        <button id="nextBtn" onclick="nextStep()">▶️ 다음 단계</button>
+        <button onclick="autoPlay()">⏯️ 자동 재생</button>
+      </div>
+
+      <div id="stepContainer" class="step-container">
+        <div class="step-title">초기 상태</div>
+        <div class="linked-list" id="linkedList"></div>
+        <div id="pointers"></div>
+        <div id="explanation"></div>
+      </div>
+
+      <div class="code-section">
+        <div class="code-title">💻 JavaScript 구현 코드</div>
+        <pre><code>function reverseLinkedList(head) {
+    let prev = null;
+    let current = head;
+    
+    while (current !== null) {
+        let next = current.next;  // 다음 노드 저장
+        current.next = prev;      // 링크 방향 뒤바꾸기
+        prev = current;           // prev 포인터 이동
+        current = next;           // current 포인터 이동
+    }
+    
+    return prev;  // 새로운 head 반환
+}</code></pre>
+      </div>
+
+      <div class="complexity">
+        <h3>⚡ 시간 & 공간 복잡도</h3>
+        <p><strong>시간 복잡도:</strong> O(n) - 모든 노드를 한 번씩 방문</p>
+        <p><strong>공간 복잡도:</strong> O(1) - 추가 메모리 사용량이 상수</p>
+      </div>
+    </div>
+
+    <script>
+      const steps = [
+        {
+          title: "초기 상태",
+          nodes: [1, 2, 3, 4],
+          prev: null,
+          current: 0,
+          next: null,
+          explanation:
+            "원본 링크드 리스트: 1 → 2 → 3 → 4 → null<br>prev = null, current = head(1)",
+        },
+        {
+          title: "1단계: next 저장",
+          nodes: [1, 2, 3, 4],
+          prev: null,
+          current: 0,
+          next: 1,
+          explanation:
+            "next = current.next (2번 노드)<br>다음 노드를 잃어버리지 않도록 저장",
+        },
+        {
+          title: "1단계: 링크 뒤바꾸기",
+          nodes: [1, 2, 3, 4],
+          prev: null,
+          current: 0,
+          next: 1,
+          explanation:
+            "current.next = prev<br>1번 노드가 null을 가리키도록 변경",
+          reversed: [0],
+        },
+        {
+          title: "1단계: 포인터 이동",
+          nodes: [1, 2, 3, 4],
+          prev: 0,
+          current: 1,
+          next: 1,
+          explanation:
+            "prev = current, current = next<br>포인터들을 다음 위치로 이동",
+          reversed: [0],
+        },
+        {
+          title: "2단계: next 저장",
+          nodes: [1, 2, 3, 4],
+          prev: 0,
+          current: 1,
+          next: 2,
+          explanation: "next = current.next (3번 노드)<br>다음 노드를 저장",
+          reversed: [0],
+        },
+        {
+          title: "2단계: 링크 뒤바꾸기",
+          nodes: [1, 2, 3, 4],
+          prev: 0,
+          current: 1,
+          next: 2,
+          explanation:
+            "current.next = prev<br>2번 노드가 1번 노드를 가리키도록 변경",
+          reversed: [0, 1],
+        },
+        {
+          title: "2단계: 포인터 이동",
+          nodes: [1, 2, 3, 4],
+          prev: 1,
+          current: 2,
+          next: 2,
+          explanation:
+            "prev = current, current = next<br>포인터들을 다음 위치로 이동",
+          reversed: [0, 1],
+        },
+        {
+          title: "3단계: next 저장",
+          nodes: [1, 2, 3, 4],
+          prev: 1,
+          current: 2,
+          next: 3,
+          explanation: "next = current.next (4번 노드)<br>다음 노드를 저장",
+          reversed: [0, 1],
+        },
+        {
+          title: "3단계: 링크 뒤바꾸기",
+          nodes: [1, 2, 3, 4],
+          prev: 1,
+          current: 2,
+          next: 3,
+          explanation:
+            "current.next = prev<br>3번 노드가 2번 노드를 가리키도록 변경",
+          reversed: [0, 1, 2],
+        },
+        {
+          title: "3단계: 포인터 이동",
+          nodes: [1, 2, 3, 4],
+          prev: 2,
+          current: 3,
+          next: 3,
+          explanation:
+            "prev = current, current = next<br>포인터들을 다음 위치로 이동",
+          reversed: [0, 1, 2],
+        },
+        {
+          title: "4단계: next 저장",
+          nodes: [1, 2, 3, 4],
+          prev: 2,
+          current: 3,
+          next: null,
+          explanation:
+            "next = current.next (null)<br>마지막 노드이므로 next는 null",
+          reversed: [0, 1, 2],
+        },
+        {
+          title: "4단계: 링크 뒤바꾸기",
+          nodes: [1, 2, 3, 4],
+          prev: 2,
+          current: 3,
+          next: null,
+          explanation:
+            "current.next = prev<br>4번 노드가 3번 노드를 가리키도록 변경",
+          reversed: [0, 1, 2, 3],
+        },
+        {
+          title: "완료!",
+          nodes: [1, 2, 3, 4],
+          prev: 3,
+          current: null,
+          next: null,
+          explanation:
+            "현재 포인터가 null이 되어 반복 종료<br>prev(4번 노드)가 새로운 head가 됩니다<br><strong>결과: 4 → 3 → 2 → 1 → null</strong>",
+          reversed: [0, 1, 2, 3],
+        },
+      ];
+
+      let currentStep = 0;
+      let autoPlayInterval = null;
+
+      function renderStep(step) {
+        const container = document.getElementById("stepContainer");
+        const title = container.querySelector(".step-title");
+        const listContainer = document.getElementById("linkedList");
+        const pointersContainer = document.getElementById("pointers");
+        const explanationContainer = document.getElementById("explanation");
+
+        title.textContent = step.title;
+
+        // Render linked list
+        listContainer.innerHTML = "";
+        for (let i = 0; i < step.nodes.length; i++) {
+          const node = document.createElement("div");
+          node.className = "node";
+          node.textContent = step.nodes[i];
+
+          if (i === step.current) {
+            node.classList.add("current");
+          } else if (i === step.prev) {
+            node.classList.add("prev");
+          } else if (i === step.next) {
+            node.classList.add("next");
+          }
+
+          listContainer.appendChild(node);
+
+          if (i < step.nodes.length - 1) {
+            const arrow = document.createElement("span");
+            arrow.className = "arrow";
+
+            // Show reversed arrows
+            if (step.reversed && step.reversed.includes(i + 1)) {
+              arrow.textContent = "←";
+              arrow.style.color = "#e74c3c";
+            } else {
+              arrow.textContent = "→";
+            }
+
+            listContainer.appendChild(arrow);
+          }
+        }
+
+        // Add null at the end
+        const nullNode = document.createElement("span");
+        nullNode.textContent = "null";
+        nullNode.style.color = "#7f8c8d";
+        nullNode.style.fontStyle = "italic";
+        listContainer.appendChild(nullNode);
+
+        // Render pointers
+        pointersContainer.innerHTML = `
+                <div class="pointer"><strong>prev:</strong> ${
+                  step.prev === null ? "null" : step.nodes[step.prev]
+                }</div>
+                <div class="pointer"><strong>current:</strong> ${
+                  step.current === null ? "null" : step.nodes[step.current]
+                }</div>
+                <div class="pointer"><strong>next:</strong> ${
+                  step.next === null ? "null" : step.nodes[step.next]
+                }</div>
+            `;
+
+        // Render explanation
+        explanationContainer.innerHTML = `<p>${step.explanation}</p>`;
+
+        // Update button state
+        document.getElementById("nextBtn").disabled =
+          currentStep >= steps.length - 1;
+      }
+
+      function nextStep() {
+        if (currentStep < steps.length - 1) {
+          currentStep++;
+          renderStep(steps[currentStep]);
+        }
+      }
+
+      function resetAnimation() {
+        currentStep = 0;
+        renderStep(steps[currentStep]);
+        if (autoPlayInterval) {
+          clearInterval(autoPlayInterval);
+          autoPlayInterval = null;
+        }
+      }
+
+      function autoPlay() {
+        if (autoPlayInterval) {
+          clearInterval(autoPlayInterval);
+          autoPlayInterval = null;
+          return;
+        }
+
+        autoPlayInterval = setInterval(() => {
+          if (currentStep < steps.length - 1) {
+            nextStep();
+          } else {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = null;
+          }
+        }, 2000);
+      }
+
+      // Initialize
+      renderStep(steps[0]);
+    </script>
+  </body>
+</html>
