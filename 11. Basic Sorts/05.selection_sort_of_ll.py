@@ -33,14 +33,22 @@ class LinkedList:
         self.length += 1
 
     def selection_sort(self):
-        for i in range(1, self.length):
-            current_node = self.head
-            min_value_node = self.head
+        first_node = self.head
+        for i in range(self.length):
+            min_node = first_node
+            current_node = first_node
 
-            for j in range(i):
-                next_node = current_node.next
-                if min_value_node > next_node.value:
-                    min_value_node = next_node
+            for _ in range(i + 1, self.length):
+                current_node = current_node.next
+
+                if min_node.value > current_node.value:
+                    min_node = current_node
+
+            first_node.value, min_node.value = min_node.value, first_node.value
+
+            first_node = first_node.next
+
+        return
 
 
 # Test Cases:
